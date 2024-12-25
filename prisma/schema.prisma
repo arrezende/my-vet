@@ -9,6 +9,35 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
+}
+
+model Tutor {
+  id       Int      @id @default(autoincrement())
+  nome     String
+  cpf      String   @unique
+  endereco String?
+  telefone String?
+  email    String?
+  animais  Animal[]
+}
+
+model Animal {
+  id             Int        @id @default(autoincrement())
+  nome           String
+  especie        String
+  raca           String?
+  dataNascimento String?
+  tutor          Tutor      @relation(fields: [tutorId], references: [id])
+  tutorId        Int
+  consultas      Consulta[]
+}
+
+model Consulta {
+  id        Int     @id @default(autoincrement())
+  data      String?
+  descricao String?
+  animal    Animal  @relation(fields: [animalId], references: [id])
+  animalId  Int
 }
