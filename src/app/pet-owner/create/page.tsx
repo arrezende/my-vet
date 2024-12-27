@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 type Tutor = {
   nome: string
@@ -50,7 +50,7 @@ const cadastroSchema = z.object({
 })
 export default function PetOwnerCreate() {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [tutores, setTutores] = useState<Tutor[]>([])
+
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof cadastroSchema>>({
@@ -66,7 +66,7 @@ export default function PetOwnerCreate() {
 
   const onSubmit = (values: z.infer<typeof cadastroSchema>) => {
     setIsSubmitting(true)
-    async function createPetOwner(values) {
+    async function createPetOwner(values: Tutor) {
       const res = await fetch('/api/tutores/create', {
         method: 'POST',
         headers: {
@@ -94,7 +94,6 @@ export default function PetOwnerCreate() {
       })
       setIsSubmitting(false)
       form.reset()
-      return setTutores(data)
     }
     if (values) {
       const petOwner = createPetOwner(values)
