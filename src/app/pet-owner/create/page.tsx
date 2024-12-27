@@ -18,7 +18,15 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+type Tutor = {
+  nome: string
+  cpf: string
+  endereco: string
+  telefone: string
+  email: string
+}
 
 const cadastroSchema = z.object({
   nome: z
@@ -42,6 +50,7 @@ const cadastroSchema = z.object({
 })
 export default function PetOwnerCreate() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [tutores, setTutores] = useState<Tutor[]>([])
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof cadastroSchema>>({
@@ -57,16 +66,40 @@ export default function PetOwnerCreate() {
 
   const onSubmit = (values: z.infer<typeof cadastroSchema>) => {
     setIsSubmitting(true)
-    // Simula um envio de formulário
-    setTimeout(() => {
-      setIsSubmitting(false)
-      console.log(values)
+    async function createPetOwner(values) {
+      const res = await fetch('/api/tutores/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
+
+      if (!res.ok) {
+        const errorText = await res.text()
+        const error = JSON.parse(errorText)
+
+        toast({
+          title: 'Ops, ocorreu um erro ao cadastrar',
+          description: 'Verifique os campos e tente novamente. ' + error.error,
+        })
+        setIsSubmitting(false)
+        return
+      }
+      const data = await res.json()
+      console.log('Tutor cadastrado com sucesso:', data)
       toast({
         title: 'Cadastro realizado com sucesso!',
         description: 'Seus dados foram enviados.',
       })
+      setIsSubmitting(false)
       form.reset()
-    }, 2000)
+      return setTutores(data)
+    }
+    if (values) {
+      const petOwner = createPetOwner(values)
+      console.log(petOwner)
+    }
   }
 
   return (
