@@ -28,7 +28,7 @@ import {
 
 interface Tutor {
   id: number
-  name: string
+  nome: string
 }
 
 const cadastroSchema = z.object({
@@ -36,32 +36,44 @@ const cadastroSchema = z.object({
     .string()
     .min(3, 'Nome deve ter pelo menos 3 caracteres')
     .max(255, 'Nome muito longo'),
-  especie: z.string().min(3, 'Espécie deve ter pelo menos 3 caracteres'),
+
   raca: z.string().min(3, 'Raça deve ter pelo menos 3 caracteres'),
   dataNascimento: z
     .string()
     .regex(
       /^\d{4}-\d{2}-\d{2}$/,
-      'Data de nascimento deve estar no formato YYYY-MM-DD',
+      'Data de nascimento deve estar no formato DD-MM-YYYY',
     ),
-  tutorId: z.string().nonempty('Selecione um tutor'),
+  especie: z.string().nonempty('Espécie é obrigatória'),
+  tutorId: z.string().nonempty('Tutor é obrigatório'),
 })
 
 export default function PetOwnerCreate() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [tutores, setTutores] = useState<Tutor[]>([])
+  const [animais, setAnimais] = useState<{ id: number; name: string }[]>([])
   const { toast } = useToast()
-
   useEffect(() => {
     // Fetch tutores from API
-    // fetch('/api/tutores')
-    //   .then((response) => response.json())
-    //   .then((data) => setTutores(data))
+    async function getTutores() {
+      const res = await fetch('/api/tutores/list')
+      const data = await res.json()
+      console.log(data)
+      setTutores(data)
+    }
+    getTutores()
 
-    setTutores([
-      { id: 1, name: 'Tutor 1' },
-      { id: 2, name: 'Tutor 2' },
-      { id: 3, name: 'Tutor 3' },
+    setAnimais([
+      { id: 1, name: 'Cachorro' },
+      { id: 2, name: 'Gato' },
+      { id: 3, name: 'Aves' },
+      { id: 4, name: 'Roedores e pequenos mamíferos' },
+      { id: 5, name: 'Répteis' },
+      { id: 6, name: 'Cavalos' },
+      { id: 7, name: 'Gado (bovinos)' },
+      { id: 8, name: 'Ovinos e caprinos' },
+      { id: 9, name: 'Animais mantidos como pets exóticos' },
+      { id: 10, name: 'Animais de zoológicos ou resgatados' },
     ])
   }, [])
 
@@ -69,25 +81,50 @@ export default function PetOwnerCreate() {
     resolver: zodResolver(cadastroSchema),
     defaultValues: {
       nome: '',
-      especie: '',
       raca: '',
       dataNascimento: '',
+      especie: '',
       tutorId: '',
     },
   })
 
   const onSubmit = (values: z.infer<typeof cadastroSchema>) => {
     setIsSubmitting(true)
-    // Simula um envio de formulário
-    setTimeout(() => {
-      setIsSubmitting(false)
-      console.log(values)
+
+    async function createAnimal(values: z.infer<typeof cadastroSchema>) {
+      const res = await fetch('/api/animal/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
+
+      if (!res.ok) {
+        const errorText = await res.text()
+        const error = JSON.parse(errorText)
+
+        toast({
+          title: 'Ops, ocorreu um erro ao cadastrar',
+          description: 'Verifique os campos e tente novamente. ' + error.error,
+        })
+        setIsSubmitting(false)
+        return
+      }
+      const data = await res.json()
+      console.log('Animal cadastrado com sucesso:', data)
       toast({
         title: 'Cadastro realizado com sucesso!',
         description: 'Seus dados foram enviados.',
       })
+      setIsSubmitting(false)
       form.reset()
-    }, 2000)
+    }
+
+    if (values) {
+      const animal = createAnimal(values)
+      console.log(animal)
+    }
   }
 
   return (
@@ -125,9 +162,23 @@ export default function PetOwnerCreate() {
                   name="especie"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel htmlFor="especie">Espécie</FormLabel>
+                      <FormLabel htmlFor="especieId">Espécie</FormLabel>
                       <FormControl>
-                        <Input id="especie" {...field} placeholder="Espécie" />
+                        <Select onValueChange={field.onChange} {...field}>
+                          <SelectTrigger className="">
+                            <SelectValue placeholder="Selecione uma Espécie" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {animais.map((animal) => (
+                              <SelectItem
+                                key={animal.id}
+                                value={animal.id.toString()}
+                              >
+                                {animal.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage>{}</FormMessage>
                     </FormItem>
@@ -141,6 +192,34 @@ export default function PetOwnerCreate() {
                       <FormLabel htmlFor="raca">Raça</FormLabel>
                       <FormControl>
                         <Input id="raca" {...field} placeholder="Raça" />
+                      </FormControl>
+                      <FormMessage>{}</FormMessage>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="tutorId"
+                  render={({ field }) => (
+                    <FormItem className="mb-4">
+                      <FormLabel htmlFor="tutorId">Tutor</FormLabel>
+                      <FormControl>
+                        <Select onValueChange={field.onChange} {...field}>
+                          <SelectTrigger className="">
+                            <SelectValue placeholder="Selecione um tutor" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {tutores.map((tutor) => (
+                              <SelectItem
+                                key={tutor.id}
+                                value={tutor.id.toString()}
+                              >
+                                {tutor.nome}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage>{}</FormMessage>
                     </FormItem>
@@ -161,33 +240,6 @@ export default function PetOwnerCreate() {
                           placeholder="YYYY-MM-DD"
                           type="date"
                         />
-                      </FormControl>
-                      <FormMessage>{}</FormMessage>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="tutorId"
-                  render={({ field }) => (
-                    <FormItem className="mb-4">
-                      <FormLabel htmlFor="tutorId">Tutor</FormLabel>
-                      <FormControl>
-                        <Select onValueChange={field.onChange} {...field}>
-                          <SelectTrigger className="">
-                            <SelectValue placeholder="Selecione um tutor" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {tutores.map((tutor) => (
-                              <SelectItem
-                                key={tutor.id}
-                                value={tutor.id.toString()}
-                              >
-                                {tutor.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
                       </FormControl>
                       <FormMessage>{}</FormMessage>
                     </FormItem>
