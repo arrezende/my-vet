@@ -62,7 +62,7 @@ const data = {
         },
         {
           title: 'Listagem de Animais',
-          url: '/animal/list/',
+          url: '/animal/',
         },
       ],
     },
@@ -77,7 +77,7 @@ const data = {
         },
         {
           title: 'Listagem de Tutores',
-          url: '/pet-owner/list/',
+          url: '/pet-owner/',
         },
       ],
     },
