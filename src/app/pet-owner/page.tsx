@@ -3,7 +3,7 @@ import { OwnerListType, columns } from './components/colums'
 import { DataTable } from './components/data-table'
 
 async function getData(): Promise<OwnerListType[]> {
-  const res = await fetch('http://localhost:3000/api/tutor/list', {
+  const res = await fetch('http://localhost:3000/api/tutores/list', {
     cache: 'no-store', // Evita cache para dados dinâmicos
   })
   if (!res.ok) {
