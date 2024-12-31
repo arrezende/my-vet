@@ -83,16 +83,16 @@ const data = {
     },
     {
       title: 'Consultas',
-      url: '#',
+      url: '/consulta',
       icon: BookOpen,
       items: [
         {
           title: 'Agendar Consulta',
-          url: '#',
+          url: '/consulta/create',
         },
         {
           title: 'Histórico de Consultas',
-          url: '#',
+          url: '/consulta',
         },
       ],
     },
