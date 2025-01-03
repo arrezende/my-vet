@@ -21,7 +21,7 @@ export const columns: ColumnDef<OwnerListType>[] = [
     header: 'ID',
   },
   {
-    accessorKey: 'nome',
+    accessorKey: 'nomeCompleto',
     header: 'Nome',
   },
   {
@@ -33,7 +33,7 @@ export const columns: ColumnDef<OwnerListType>[] = [
     header: 'Endereço',
   },
   {
-    accessorKey: 'telefone',
+    accessorKey: 'celular',
     header: 'Telefone',
   },
   {
