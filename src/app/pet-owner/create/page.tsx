@@ -19,17 +19,41 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useState } from 'react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { CepConsult } from '../components/cep-consult'
+import { Search } from 'lucide-react'
 
 type Tutor = {
-  nome: string
+  nomeCompleto: string
   cpf: string
+  rg: string
+  nacionalidade: string
+  sexo: string
   endereco: string
-  telefone: string
+  numero: string
+  complemento: string
+  pontoReferencia: string
+  cidadeEstado: string
+  cep: string
+  bairro: string
+  comoNosConheceu: string
+  pessoaFisicaJuridica: string
+  profissao: string
+  celular: string
   email: string
+  telefoneResidencial: string
+  aniversario: string
+  aceitaEmailWhatsapp: boolean
 }
 
 const cadastroSchema = z.object({
-  nome: z
+  nomeCompleto: z
     .string()
     .min(3, 'Nome deve ter pelo menos 3 caracteres')
     .max(255, 'Nome muito longo'),
@@ -39,15 +63,42 @@ const cadastroSchema = z.object({
       /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/,
       'CPF deve estar no formato 000.000.000-00',
     ),
+  rg: z.string(),
+  nacionalidade: z.string(),
+  sexo: z.string(),
   endereco: z.string(),
-  telefone: z
+  numero: z.string(),
+  complemento: z.string(),
+  pontoReferencia: z.string(),
+  cidadeEstado: z.string(),
+  cep: z.string(),
+  bairro: z.string(),
+  comoNosConheceu: z.string(),
+  pessoaFisicaJuridica: z.string(),
+  profissao: z.string(),
+  celular: z
     .string()
     .regex(
       /^\(\d{2}\) \d{5}\-\d{4}$/,
-      'Telefone deve estar no formato (00) 00000-0000',
+      'Celular deve estar no formato (00) 00000-0000',
     ),
   email: z.string().email('Email inválido'),
+  telefoneResidencial: z.string().optional(),
+  aniversario: z.string(),
+  aceitaEmailWhatsapp: z.boolean(),
 })
+
+const nacionalidades = [
+  { id: 1, nome: 'Brasileiro' },
+  { id: 2, nome: 'Estrangeiro' },
+]
+
+const sexos = [
+  { id: 1, nome: 'Masculino' },
+  { id: 2, nome: 'Feminino' },
+  { id: 3, nome: 'Outro' },
+]
+
 export default function PetOwnerCreate() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -56,11 +107,26 @@ export default function PetOwnerCreate() {
   const form = useForm<z.infer<typeof cadastroSchema>>({
     resolver: zodResolver(cadastroSchema),
     defaultValues: {
-      nome: '',
+      nomeCompleto: '',
       cpf: '',
+      rg: '',
+      nacionalidade: '',
+      sexo: '',
       endereco: '',
-      telefone: '',
+      numero: '',
+      complemento: '',
+      pontoReferencia: '',
+      cidadeEstado: '',
+      cep: '',
+      bairro: '',
+      comoNosConheceu: '',
+      pessoaFisicaJuridica: '',
+      profissao: '',
+      celular: '',
       email: '',
+      telefoneResidencial: '',
+      aniversario: '',
+      aceitaEmailWhatsapp: false,
     },
   })
 
@@ -101,6 +167,15 @@ export default function PetOwnerCreate() {
     }
   }
 
+  const cepConsult = async function (cep: string) {
+    const data = await CepConsult(cep)
+
+    const { bairro, estado, logradouro } = data
+    form.setValue('bairro', bairro)
+    form.setValue('cidadeEstado', estado)
+    form.setValue('endereco', logradouro)
+  }
+
   return (
     <>
       <Header
@@ -119,15 +194,49 @@ export default function PetOwnerCreate() {
           <div className="h-px bg-zinc-300 mb-4"></div>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="grid grid-cols-1 md:grid-cols-6 gap-4"
+            >
               <FormField
                 control={form.control}
-                name="nome"
+                name="nomeCompleto"
+                render={({ field }) => (
+                  <FormItem className="mb-4 col-span-5">
+                    <FormLabel htmlFor="nomeCompleto">Nome Completo</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="nomeCompleto"
+                        {...field}
+                        placeholder="Nome Completo"
+                      />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="nacionalidade"
                 render={({ field }) => (
                   <FormItem className="mb-4">
-                    <FormLabel htmlFor="nome">Nome</FormLabel>
+                    <FormLabel htmlFor="nacionalidade">Nacionalidade</FormLabel>
                     <FormControl>
-                      <Input id="nome" {...field} placeholder="Nome" />
+                      <Select onValueChange={field.onChange} {...field}>
+                        <SelectTrigger className="">
+                          <SelectValue placeholder="Selecione uma nacionalidade" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {nacionalidades.map((nacionalidade) => (
+                            <SelectItem
+                              key={nacionalidade.id}
+                              value={nacionalidade.id.toString()}
+                            >
+                              {nacionalidade.nome}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage>{}</FormMessage>
                   </FormItem>
@@ -137,7 +246,7 @@ export default function PetOwnerCreate() {
                 control={form.control}
                 name="cpf"
                 render={({ field }) => (
-                  <FormItem className="mb-4">
+                  <FormItem className="mb-4 col-span-2">
                     <FormLabel htmlFor="cpf">CPF</FormLabel>
                     <FormControl>
                       <Input id="cpf" {...field} placeholder="CPF" />
@@ -151,12 +260,62 @@ export default function PetOwnerCreate() {
               />
               <FormField
                 control={form.control}
-                name="endereco"
+                name="rg"
+                render={({ field }) => (
+                  <FormItem className="mb-4 col-span-2">
+                    <FormLabel htmlFor="rg">RG</FormLabel>
+                    <FormControl>
+                      <Input id="rg" {...field} placeholder="RG" />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="sexo"
+                render={({ field }) => (
+                  <FormItem className="mb-4 col-span-2">
+                    <FormLabel htmlFor="sexo">Sexo</FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange} {...field}>
+                        <SelectTrigger className="">
+                          <SelectValue placeholder="Selecione um sexo" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sexos.map((sexo) => (
+                            <SelectItem
+                              key={sexo.id}
+                              value={sexo.id.toString()}
+                            >
+                              {sexo.nome}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="cep"
                 render={({ field }) => (
                   <FormItem className="mb-4">
-                    <FormLabel htmlFor="endereco">Endereço</FormLabel>
+                    <FormLabel htmlFor="cep">CEP</FormLabel>
                     <FormControl>
-                      <Input id="endereco" {...field} placeholder="endereco" />
+                      <div className="flex gap-2">
+                        <Input id="cep" {...field} placeholder="CEP" />
+                        <Button
+                          type="button"
+                          onClick={() => cepConsult(field.value)}
+                        >
+                          <Search className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </FormControl>
                     <FormMessage>{}</FormMessage>
                   </FormItem>
@@ -164,12 +323,162 @@ export default function PetOwnerCreate() {
               />
               <FormField
                 control={form.control}
-                name="telefone"
+                name="endereco"
+                render={({ field }) => (
+                  <FormItem className="mb-4 col-span-3">
+                    <FormLabel htmlFor="endereco">Endereço</FormLabel>
+                    <FormControl>
+                      <Input id="endereco" {...field} placeholder="Endereço" />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="numero"
                 render={({ field }) => (
                   <FormItem className="mb-4">
-                    <FormLabel htmlFor="telefone">Telefone</FormLabel>
+                    <FormLabel htmlFor="numero">Número</FormLabel>
                     <FormControl>
-                      <Input id="telefone" {...field} placeholder="telefone" />
+                      <Input id="numero" {...field} placeholder="Número" />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="complemento"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel htmlFor="complemento">Complemento</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="complemento"
+                        {...field}
+                        placeholder="Complemento"
+                      />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="pontoReferencia"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel htmlFor="pontoReferencia">
+                      Ponto de Referência
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        id="pontoReferencia"
+                        {...field}
+                        placeholder="Ponto de Referência"
+                      />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="cidadeEstado"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel htmlFor="cidadeEstado">Cidade/Estado</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="cidadeEstado"
+                        {...field}
+                        placeholder="Cidade/Estado"
+                      />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="bairro"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel htmlFor="bairro">Bairro</FormLabel>
+                    <FormControl>
+                      <Input id="bairro" {...field} placeholder="Bairro" />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="comoNosConheceu"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel htmlFor="comoNosConheceu">
+                      Como nos conheceu
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        id="comoNosConheceu"
+                        {...field}
+                        placeholder="Como nos conheceu"
+                      />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="pessoaFisicaJuridica"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel htmlFor="pessoaFisicaJuridica">
+                      Pessoa Física/Jurídica
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        id="pessoaFisicaJuridica"
+                        {...field}
+                        placeholder="Pessoa Física/Jurídica"
+                      />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="profissao"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel htmlFor="profissao">Profissão</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="profissao"
+                        {...field}
+                        placeholder="Profissão"
+                      />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="celular"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel htmlFor="celular">
+                      Celular (é WhatsApp)
+                    </FormLabel>
+                    <FormControl>
+                      <Input id="celular" {...field} placeholder="Celular" />
                     </FormControl>
                     <FormDescription>
                       Use o formato: (00) 00000-0000
@@ -188,8 +497,63 @@ export default function PetOwnerCreate() {
                       <Input
                         id="email"
                         {...field}
-                        placeholder="email"
+                        placeholder="Email"
                         type="email"
+                      />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="telefoneResidencial"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel htmlFor="telefoneResidencial">
+                      Telefone Residencial
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        id="telefoneResidencial"
+                        {...field}
+                        placeholder="Telefone Residencial"
+                      />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="aniversario"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel htmlFor="aniversario">Aniversário</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="aniversario"
+                        {...field}
+                        placeholder="Aniversário"
+                      />
+                    </FormControl>
+                    <FormMessage>{}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="aceitaEmailWhatsapp"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel htmlFor="aceitaEmailWhatsapp">
+                      Aceita Email/WhatsApp
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        id="aceitaEmailWhatsapp"
+                        type="checkbox"
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage>{}</FormMessage>

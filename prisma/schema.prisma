@@ -14,13 +14,28 @@ datasource db {
 }
 
 model Tutor {
-  id       Int      @id @default(autoincrement())
-  nome     String
-  cpf      String   @unique
-  endereco String?
-  telefone String?
-  email    String?
-  animais  Animal[]
+  id                   Int      @id @default(autoincrement())
+  nomeCompleto         String
+  cpf                  String   @unique
+  rg                   String
+  nacionalidade        String
+  sexo                 String
+  endereco             String
+  numero               String
+  complemento          String
+  pontoReferencia      String
+  cidadeEstado         String
+  cep                  String
+  bairro               String
+  comoNosConheceu      String
+  pessoaFisicaJuridica String
+  profissao            String
+  celular              String
+  email                String
+  telefoneResidencial  String
+  aniversario          String
+  aceitaEmailWhatsapp  Boolean
+  animais              Animal[]
 }
 
 model Animal {

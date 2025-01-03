@@ -5,12 +5,34 @@ const prisma = new PrismaClient()
 export async function POST(req: Request) {
   try {
     const body = await req.json() // Pega o corpo da requisição como JSON
-    const { nome, cpf, endereco, telefone, email, animais } = body
+    const {
+      nomeCompleto,
+      cpf,
+      rg,
+      nacionalidade,
+      sexo,
+      endereco,
+      numero,
+      complemento,
+      pontoReferencia,
+      cidadeEstado,
+      cep,
+      bairro,
+      comoNosConheceu,
+      pessoaFisicaJuridica,
+      profissao,
+      celular,
+      email,
+      telefoneResidencial,
+      aniversario,
+      aceitaEmailWhatsapp,
+      animais,
+    } = body
 
     // Validação simples
-    if (!nome || !cpf) {
+    if (!nomeCompleto || !cpf) {
       return new Response(
-        JSON.stringify({ error: 'Nome e CPF são obrigatórios' }),
+        JSON.stringify({ error: 'Nome completo e CPF são obrigatórios' }),
         { status: 400 },
       )
     }
@@ -18,11 +40,26 @@ export async function POST(req: Request) {
     // Cria o tutor no banco de dados
     const tutor = await prisma.tutor.create({
       data: {
-        nome,
+        nomeCompleto,
         cpf,
+        rg,
+        nacionalidade,
+        sexo,
         endereco,
-        telefone,
+        numero,
+        complemento,
+        pontoReferencia,
+        cidadeEstado,
+        cep,
+        bairro,
+        comoNosConheceu,
+        pessoaFisicaJuridica,
+        profissao,
+        celular,
         email,
+        telefoneResidencial,
+        aniversario,
+        aceitaEmailWhatsapp,
         animais: {
           create: animais || [], // Cria os animais relacionados, se enviados
         },
