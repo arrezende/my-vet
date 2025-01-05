@@ -41,7 +41,7 @@ export const columns: ColumnDef<AnimalListType>[] = [
     },
   },
   {
-    accessorKey: 'tutor.nome',
+    accessorKey: 'tutor.nomeCompleto',
     header: 'Tutor',
   },
   {
