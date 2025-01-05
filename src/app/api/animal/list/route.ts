@@ -10,7 +10,7 @@ export async function GET() {
         tutor: {
           // Inclui o tutor relacionado
           select: {
-            nome: true, // Apenas os campos necessários do tutor
+            nomeCompleto: true, // Apenas os campos necessários do tutor
           },
         },
       },

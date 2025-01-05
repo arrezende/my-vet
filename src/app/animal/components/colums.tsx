@@ -10,7 +10,7 @@ export type AnimalListType = {
   dataNascimento: string
   tutorId: number
   tutor: {
-    nome: string
+    nomeCompleto: string
   }
   consultas: string
 }
@@ -41,7 +41,7 @@ export const columns: ColumnDef<AnimalListType>[] = [
     },
   },
   {
-    accessorKey: 'tutor.nome',
+    accessorKey: 'tutor.nomeCompleto',
     header: 'Tutor',
   },
   {

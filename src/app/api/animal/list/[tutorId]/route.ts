@@ -16,11 +16,12 @@ export async function GET(
         tutor: {
           // Inclui o tutor relacionado
           select: {
-            nome: true, // Apenas os campos necessários do tutor
+            nomeCompleto: true,
           },
         },
       },
     })
+
     if (animals.length === 0) {
       return new Response(
         JSON.stringify([{ id: 0, nome: 'Nenhum animal encontrado' }]),
@@ -29,6 +30,7 @@ export async function GET(
         },
       )
     }
+
     return new Response(JSON.stringify(animals), { status: 200 })
   } catch (error) {
     console.error('Erro ao buscar os animais:', error)

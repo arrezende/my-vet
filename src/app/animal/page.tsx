@@ -3,9 +3,10 @@ import { AnimalListType, columns } from './components/colums'
 import { DataTable } from './components/data-table'
 
 async function getData(): Promise<AnimalListType[]> {
-  const res = await fetch('http://localhost:3000/api/animal/list', {
+  const res = await fetch('http://192.168.10.8:3000/api/animal/list', {
     cache: 'no-store', // Evita cache para dados dinâmicos
   })
+
   if (!res.ok) {
     throw new Error('Erro ao carregar dados')
   }
@@ -19,7 +20,8 @@ export default async function AnimalList() {
     data = await getData()
   } catch (error) {
     console.error(error)
-    return <p className="text-red-500">Erro ao carregar dados.</p>
+    return (data = [])
+    //<p className="text-red-500">Erro ao carregar dados.</p>
   }
 
   return (
@@ -37,7 +39,13 @@ export default async function AnimalList() {
           </div>
           <div className="h-px bg-zinc-300 mb-4"></div>
           <div>
-            <DataTable columns={columns} data={data} />
+            {!data.length ? (
+              <p className="text-left text-xl text-muted-foreground">
+                Nenhum animal cadastrado.
+              </p>
+            ) : (
+              <DataTable columns={columns} data={data} />
+            )}
           </div>
         </div>
       </div>

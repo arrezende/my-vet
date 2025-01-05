@@ -28,7 +28,7 @@ import {
 
 interface Tutor {
   id: number
-  nome: string
+  nomeCompleto: string
 }
 
 const cadastroSchema = z.object({
@@ -215,7 +215,7 @@ export default function PetOwnerCreate() {
                                 key={tutor.id}
                                 value={tutor.id.toString()}
                               >
-                                {tutor.nome}
+                                {tutor.nomeCompleto}
                               </SelectItem>
                             ))}
                           </SelectContent>
