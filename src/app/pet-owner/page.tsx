@@ -19,7 +19,8 @@ export default async function OwnerList() {
     data = await getData()
   } catch (error) {
     console.error(error)
-    return <p className="text-red-500">Erro ao carregar dados.</p>
+    return (data = [])
+    //<p className="text-red-500">Erro ao carregar dados.</p>
   }
 
   return (
@@ -37,7 +38,13 @@ export default async function OwnerList() {
           </div>
           <div className="h-px bg-zinc-300 mb-4"></div>
           <div>
-            <DataTable columns={columns} data={data} />
+            {!data.length ? (
+              <p className="text-left text-xl text-muted-foreground">
+                Nenhum animal cadastrado.
+              </p>
+            ) : (
+              <DataTable columns={columns} data={data} />
+            )}
           </div>
         </div>
       </div>

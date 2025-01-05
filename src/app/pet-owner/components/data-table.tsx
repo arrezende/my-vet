@@ -59,11 +59,22 @@ export function DataTable<TData, TValue>({
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                {row.getVisibleCells().map((cell) =>
+                  cell.column.id === 'animais' ? (
+                    <TableCell key={cell.id}>
+                      {(row.original as any).animais.map((animal: any) => (
+                        <div key={animal.id}>{animal.nome}</div>
+                      ))}
+                    </TableCell>
+                  ) : (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ),
+                )}
               </TableRow>
             ))
           ) : (
