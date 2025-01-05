@@ -1,6 +1,7 @@
 import { Header } from '@/components/header'
 import { AnimalListType, columns } from './components/colums'
 import { DataTable } from './components/data-table'
+import Calendar from '@/components/calendar'
 
 async function getData(): Promise<AnimalListType[]> {
   const res = await fetch('http://localhost:3000/api/animal/list', {
@@ -39,6 +40,13 @@ export default async function AnimalList() {
           <div>
             <DataTable columns={columns} data={data} />
           </div>
+          <Calendar
+            events={[
+              { title: 'event 1', date: '2025-01-01' },
+              { title: 'event 2', date: '2025-01-02' },
+              { title: 'event 3', date: '2025-01-01' },
+            ]}
+          />
         </div>
       </div>
     </>
