@@ -199,7 +199,7 @@ export default function ConsultCreate() {
                                 key={tutor.id}
                                 value={tutor.id.toString()}
                               >
-                                {tutor.nome}
+                                {tutor.nomeCompleto}
                               </SelectItem>
                             ))}
                           </SelectContent>
