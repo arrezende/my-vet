@@ -1,10 +1,24 @@
 import { Header } from '@/components/header'
-import { AnimalListType, columns } from './components/colums'
+import { columns } from './components/colums'
 import { DataTable } from './components/data-table'
 import Calendar from '@/components/calendar'
+import dayjs from 'dayjs'
 
-async function getData(): Promise<AnimalListType[]> {
-  const res = await fetch('http://localhost:3000/api/animal/list', {
+type ConsultProps = {
+  id: number
+  data: string
+  descricao: string
+  animalId: number
+  animal: {
+    nome: string
+    especie: string
+    raca: string
+    dataNascimento: string
+  }
+}
+
+async function getData(): Promise<ConsultProps[]> {
+  const res = await fetch('http://localhost:3000/api/consulta', {
     cache: 'no-store', // Evita cache para dados dinâmicos
   })
   if (!res.ok) {
@@ -14,15 +28,20 @@ async function getData(): Promise<AnimalListType[]> {
 }
 
 export default async function AnimalList() {
-  let data: AnimalListType[] = []
+  let dataResult: ConsultProps[]
 
   try {
-    data = await getData()
+    dataResult = await getData()
   } catch (error) {
     console.error(error)
     return <p className="text-red-500">Erro ao carregar dados.</p>
   }
-
+  const dataConsult = dataResult.map(
+    (item): { title: string; date: string } => ({
+      title: item.animal.nome + ' | ' + dayjs(item.data).format('HH:mm'),
+      date: dayjs(item.data).format('YYYY-MM-DD'),
+    }),
+  )
   return (
     <>
       <Header category="Animais" link="/animal" page="Listagem de animais" />
@@ -38,15 +57,9 @@ export default async function AnimalList() {
           </div>
           <div className="h-px bg-zinc-300 mb-4"></div>
           <div>
-            <DataTable columns={columns} data={data} />
+            <DataTable columns={columns} data={dataResult} />
           </div>
-          <Calendar
-            events={[
-              { title: 'event 1', date: '2025-01-01' },
-              { title: 'event 2', date: '2025-01-02' },
-              { title: 'event 3', date: '2025-01-01' },
-            ]}
-          />
+          <Calendar events={dataConsult} />
         </div>
       </div>
     </>

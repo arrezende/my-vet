@@ -4,6 +4,7 @@ import { Header } from '@/components/header'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import { useParams } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
 
 import { Input } from '@/components/ui/input'
@@ -24,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import dayjs from 'dayjs'
 
 interface Consulta {
   id: number
@@ -41,7 +43,8 @@ const cadastroSchema = z.object({
   animal: z.string().nonempty('O animal é obrigatório'),
 })
 
-export default function ConsultCreate() {
+export default function ConsultCreateByDate() {
+  const params = useParams<{ tag: string; item: string; date: string }>()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [animais, setAnimais] = useState<{ id: number; nome: string }[]>([])
   const [tutor, setTutor] = useState<{ id: number; nome: string }[]>([])
@@ -76,11 +79,11 @@ export default function ConsultCreate() {
   const form = useForm<z.infer<typeof cadastroSchema>>({
     resolver: zodResolver(cadastroSchema),
     defaultValues: {
-      data: Date.now().toString(),
+      data: dayjs(params.date).format('YYYY-MM-DDTHH:mm:ss'),
       descricao: '',
     },
   })
-
+  //   form.setValue('data', dayjs(params.date).toISOString())
   const onSubmit = (values: z.infer<typeof cadastroSchema>) => {
     setIsSubmitting(true)
 

@@ -21,27 +21,20 @@ export const columns: ColumnDef<AnimalListType>[] = [
     header: 'ID',
   },
   {
-    accessorKey: 'nome',
+    accessorKey: 'animal.nome',
     header: 'Nome',
   },
   {
-    accessorKey: 'especie',
+    accessorKey: 'animal.especie',
     header: 'Espécie',
   },
   {
-    accessorKey: 'raca',
+    accessorKey: 'animal.raca',
     header: 'Raça',
   },
+
   {
-    accessorKey: 'dataNascimento',
-    header: 'Data de Nascimento',
-    cell: ({ row }: any) => {
-      const date = new Date(row.original.dataNascimento)
-      return date.toLocaleDateString('pt-BR')
-    },
-  },
-  {
-    accessorKey: 'tutor.nomeCompleto',
+    accessorKey: 'animal.tutor.nomeCompleto',
     header: 'Tutor',
   },
   {

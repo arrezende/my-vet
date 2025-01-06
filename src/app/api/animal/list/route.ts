@@ -13,6 +13,11 @@ export async function GET() {
             nomeCompleto: true, // Apenas os campos necessários do tutor
           },
         },
+        consultas: {
+          select: {
+            data: true,
+          },
+        },
       },
     })
 
