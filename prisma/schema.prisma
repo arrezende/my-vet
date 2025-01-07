@@ -50,9 +50,17 @@ model Animal {
 }
 
 model Consulta {
-  id        Int     @id @default(autoincrement())
-  data      String?
-  descricao String?
-  animal    Animal  @relation(fields: [animalId], references: [id])
-  animalId  Int
+  id             Int           @id @default(autoincrement())
+  data           String?
+  descricao      String?
+  animal         Animal        @relation(fields: [animalId], references: [id])
+  animalId       Int
+  Profissional   Profissional? @relation(fields: [profissionalId], references: [id])
+  profissionalId Int?
+}
+
+model Profissional {
+  id        Int        @id @default(autoincrement())
+  nome      String
+  consultas Consulta[]
 }
