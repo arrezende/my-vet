@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { CalendarClock, PawPrint } from 'lucide-react'
 
 type CalendarEvent = {
   title: string
@@ -48,11 +49,17 @@ export default function Calendar(events: CalendarEvent[]) {
     console.log(title)
     return (
       <ul className="bg-green-300 p-3 text-green-900">
-        <li>
-          <b>Nome:</b> {title}
+        <li className="flex gap-2">
+          <b>
+            <PawPrint size={16} />
+          </b>{' '}
+          {title}
         </li>
-        <li>
-          <b>Hora agendada:</b> {hour}
+        <li className="flex gap-2">
+          <b>
+            <CalendarClock size={16} />
+          </b>{' '}
+          {hour}
         </li>
       </ul>
     )

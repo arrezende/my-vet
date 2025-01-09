@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import CustomDatePicker from '../components/custom-date-picker'
 
 interface Consulta {
   id: number
@@ -32,6 +33,8 @@ interface Consulta {
   animal: string
   animalId: number
   tutor: string
+  veterinario: string
+  veterinarioId: string
 }
 
 const cadastroSchema = z.object({
@@ -44,6 +47,9 @@ const cadastroSchema = z.object({
 export default function ConsultCreate() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [animais, setAnimais] = useState<{ id: number; nome: string }[]>([])
+  const [veterinarios, setVeterinarios] = useState<
+    { id: number; nome: string }[]
+  >([])
   const [tutor, setTutor] = useState<{ id: number; nome: string }[]>([])
   const [tutorSelected, setTutorSelected] = useState('')
   const { toast } = useToast()
@@ -60,6 +66,12 @@ export default function ConsultCreate() {
       setTutor(data)
     }
     getTutor()
+
+    setVeterinarios([
+      { id: 1, nome: 'Veterinário 1' },
+      { id: 2, nome: 'Veterinário 2' },
+      { id: 3, nome: 'Veterinário 3' },
+    ])
   }, [])
   useEffect(() => {
     if (tutorSelected) {
@@ -160,6 +172,19 @@ export default function ConsultCreate() {
                 />
                 <FormField
                   control={form.control}
+                  name="data"
+                  render={({ field }) => (
+                    <FormItem className="mb-4">
+                      <FormLabel htmlFor="data">Data da Consulta</FormLabel>
+                      <FormControl>
+                        <CustomDatePicker />
+                      </FormControl>
+                      <FormMessage>{}</FormMessage>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
                   name="descricao"
                   render={({ field }) => (
                     <FormItem className="mb-4">
@@ -235,6 +260,42 @@ export default function ConsultCreate() {
                                 disabled={animal.id === 0}
                               >
                                 {animal.nome}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage>{}</FormMessage>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="veterinario"
+                  render={({ field }) => (
+                    <FormItem className="mb-4">
+                      <FormLabel htmlFor="veterinarioId">Veterinário</FormLabel>
+                      <FormControl>
+                        <Select onValueChange={field.onChange} {...field}>
+                          <SelectTrigger className="">
+                            <SelectValue placeholder="Selecione um Veterinário" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem
+                              key={0}
+                              value="Selecione um Veterinário"
+                              selected={true}
+                              disabled={true}
+                            >
+                              Selecione um Veterinário
+                            </SelectItem>
+                            {veterinarios.map((veterinario) => (
+                              <SelectItem
+                                key={veterinario.id}
+                                value={veterinario.id.toString()}
+                                disabled={veterinario.id === 0}
+                              >
+                                {veterinario.nome}
                               </SelectItem>
                             ))}
                           </SelectContent>

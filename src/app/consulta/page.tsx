@@ -56,10 +56,14 @@ export default async function AnimalList() {
             </p>
           </div>
           <div className="h-px bg-zinc-300 mb-4"></div>
-          <div>
-            <DataTable columns={columns} data={dataResult} />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <div className="col-span-10">
+              <Calendar events={dataConsult} />
+            </div>
+            <div className="col-span-2">
+              <DataTable columns={columns} data={dataResult} />
+            </div>
           </div>
-          <Calendar events={dataConsult} />
         </div>
       </div>
     </>

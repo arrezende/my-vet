@@ -29,3 +29,11 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+@layer components {
+  --fc-today-bg-color2: #fff !important;
+  table.fc-col-header {
+  }
+  td.fc-day.fc-day-mon.fc-day-today.fc-daygrid-day .fc-day-today {
+    background: red !important;
+  }
+}
