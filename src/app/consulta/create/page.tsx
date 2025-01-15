@@ -24,11 +24,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import CustomDatePicker from '../components/custom-date-picker'
 
 interface Consulta {
   id: number
   data: string
+  horario: string
   descricao: string
   animal: string
   animalId: number
@@ -39,9 +39,10 @@ interface Consulta {
 
 const cadastroSchema = z.object({
   descricao: z.string().min(3, 'A descrição deve ter pelo menos 3 caracteres'),
-
   data: z.string().nonempty('A data é obrigatória'),
   animal: z.string().nonempty('O animal é obrigatório'),
+  horario: z.string().nonempty('O horario é obrigatório'),
+  veterinario: z.string().nonempty('O veterinario é obrigatório'),
 })
 
 export default function ConsultCreate() {
@@ -52,12 +53,26 @@ export default function ConsultCreate() {
   >([])
   const [tutor, setTutor] = useState<{ id: number; nome: string }[]>([])
   const [tutorSelected, setTutorSelected] = useState('')
+  const [schedules, setSchedules] = useState<string[]>([]) // Horários disponíveis
+  const [loading, setLoading] = useState(true) // Status de carregamento
+
   const { toast } = useToast()
 
   const ownerSelected = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setTutorSelected(event.target.value)
   }
+  useEffect(() => {
+    const fetchFakeSchedules = () => {
+      setLoading(true)
+      setTimeout(() => {
+        const fakeData = ['09:00', '10:30', '13:00', '15:30']
+        setSchedules(fakeData)
+        setLoading(false)
+      }, 1000) // Simula 1 segundo de atraso
+    }
 
+    fetchFakeSchedules()
+  }, [])
   useEffect(() => {
     // Fetch tutores from API
     async function getTutor() {
@@ -89,6 +104,7 @@ export default function ConsultCreate() {
     resolver: zodResolver(cadastroSchema),
     defaultValues: {
       data: Date.now().toString(),
+      horario: '',
       descricao: '',
     },
   })
@@ -163,7 +179,7 @@ export default function ConsultCreate() {
                           id="data"
                           {...field}
                           placeholder="YYYY-MM-DD HH:mm:ss"
-                          type="datetime-local"
+                          type="date"
                         />
                       </FormControl>
                       <FormMessage>{}</FormMessage>
@@ -172,17 +188,37 @@ export default function ConsultCreate() {
                 />
                 <FormField
                   control={form.control}
-                  name="data"
+                  name="horario"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel htmlFor="data">Data da Consulta</FormLabel>
+                      <FormLabel htmlFor="horario">Hora da Consulta</FormLabel>
                       <FormControl>
-                        <CustomDatePicker />
+                        <Select onValueChange={field.onChange} {...field}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione o horário" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {schedules.map(
+                              (horario) => (
+                                console.log(horario),
+                                (
+                                  <SelectItem
+                                    key={horario}
+                                    value={horario.toString()}
+                                  >
+                                    {horario}
+                                  </SelectItem>
+                                )
+                              ),
+                            )}
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage>{}</FormMessage>
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="descricao"

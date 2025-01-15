@@ -52,6 +52,7 @@ model Animal {
 model Consulta {
   id             Int           @id @default(autoincrement())
   data           String?
+  horario        String?
   descricao      String?
   animal         Animal        @relation(fields: [animalId], references: [id])
   animalId       Int
