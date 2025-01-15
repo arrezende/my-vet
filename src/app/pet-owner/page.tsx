@@ -26,8 +26,8 @@ export default async function OwnerList() {
   return (
     <>
       <Header category="Tutores" link="/tutor" page="Listagem de tutores" />
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0  bg-themeGray">
+        <div className="min-h-[100vh] flex-1 rounded-xl md:min-h-min mt-3">
           <div>
             <h3 className="text-lg font-medium">
               Listagem de Tutores Cadastrados
@@ -36,15 +36,16 @@ export default async function OwnerList() {
               Veja abaixo todos os tutores cadastrados
             </p>
           </div>
-          <div className="h-px bg-zinc-300 mb-4"></div>
-          <div>
-            {!data.length ? (
-              <p className="text-left text-xl text-muted-foreground">
-                Nenhum animal cadastrado.
-              </p>
-            ) : (
-              <DataTable columns={columns} data={data} />
-            )}
+          <div className="h-px bg-white mb-4">
+            <div>
+              {!data.length ? (
+                <p className="text-left text-xl text-muted-foreground">
+                  Nenhum animal cadastrado.
+                </p>
+              ) : (
+                <DataTable columns={columns} data={data} />
+              )}
+            </div>
           </div>
         </div>
       </div>

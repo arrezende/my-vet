@@ -45,8 +45,8 @@ export default async function AnimalList() {
   return (
     <>
       <Header category="Animais" link="/animal" page="Listagem de animais" />
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0  bg-themeGray">
+        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min mt-3">
           <div>
             <h3 className="text-lg font-medium">
               Listagem de Animais Cadastrados
@@ -58,7 +58,7 @@ export default async function AnimalList() {
           <div className="h-px bg-zinc-300 mb-4"></div>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             <div className="col-span-10">
-              <Calendar events={dataConsult} />
+              <Calendar events={dataConsult} className="bg-white" />
             </div>
             <div className="col-span-2">
               <DataTable columns={columns} data={dataResult} />

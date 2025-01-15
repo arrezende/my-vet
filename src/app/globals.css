@@ -9,14 +9,17 @@ body {
 @layer base {
   :root {
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 79.59 34.27% 28.04%;
+    /* --sidebar-background: 0 0 0; */
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
+    --sidebar-border: 80 51% 27%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --siderbar-title: 84 31% 70%;
+    --bg-theme-gray: 0 0% 92.16%;
   }
   .dark {
     --sidebar-background: 240 5.9% 10%;
@@ -30,6 +33,9 @@ body {
   }
 }
 @layer components {
+  .sr-only {
+    display: none;
+  }
   --fc-today-bg-color2: #fff !important;
   table.fc-col-header {
   }

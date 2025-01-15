@@ -48,7 +48,7 @@ export default function Calendar(events: CalendarEvent[]) {
     const hour = props.event.title.split('|')[1]
     console.log(title)
     return (
-      <ul className="bg-green-300 p-3 text-green-900">
+      <ul className="bg-themeColor p-3 text-white">
         <li className="flex gap-2">
           <b>
             <PawPrint size={16} />
@@ -65,7 +65,7 @@ export default function Calendar(events: CalendarEvent[]) {
     )
   }
   return (
-    <>
+    <div className="bg-white p-4">
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -107,6 +107,6 @@ export default function Calendar(events: CalendarEvent[]) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   )
 }

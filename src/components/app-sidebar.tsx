@@ -30,7 +30,7 @@ const data = {
   user: {
     name: 'My Vet',
     email: 'm@myvet.com',
-    avatar: '/avatars/shadcn.jpg',
+    avatar: '/logo.png',
   },
   teams: [
     {
