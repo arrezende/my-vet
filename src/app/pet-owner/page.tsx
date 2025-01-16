@@ -6,9 +6,7 @@ async function getData(): Promise<OwnerListType[]> {
   const res = await fetch('http://localhost:3000/api/tutores/list', {
     cache: 'no-store', // Evita cache para dados dinâmicos
   })
-  if (!res.ok) {
-    throw new Error('Erro ao carregar dados')
-  }
+
   return res.json()
 }
 
@@ -39,7 +37,7 @@ export default async function OwnerList() {
           <div className="h-px bg-white mb-4">
             <div>
               {!data.length ? (
-                <p className="text-left text-xl text-muted-foreground">
+                <p className="text-left text-xl text-muted-foreground pt-3">
                   Nenhum animal cadastrado.
                 </p>
               ) : (

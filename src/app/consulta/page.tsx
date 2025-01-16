@@ -21,9 +21,7 @@ async function getData(): Promise<ConsultProps[]> {
   const res = await fetch('http://localhost:3000/api/consulta', {
     cache: 'no-store', // Evita cache para dados dinâmicos
   })
-  if (!res.ok) {
-    throw new Error('Erro ao carregar dados')
-  }
+
   return res.json()
 }
 
@@ -33,8 +31,7 @@ export default async function AnimalList() {
   try {
     dataResult = await getData()
   } catch (error) {
-    console.error(error)
-    return <p className="text-red-500">Erro ao carregar dados.</p>
+    dataResult = []
   }
   const dataConsult = dataResult.map(
     (item): { title: string; date: string } => ({

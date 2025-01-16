@@ -23,7 +23,6 @@ export async function GET() {
 
     return new Response(JSON.stringify(animals), { status: 200 })
   } catch (error) {
-    console.error('Erro ao buscar os animais:', error)
     return new Response(
       JSON.stringify({ error: 'Erro ao buscar os animais' }),
       {

@@ -3,13 +3,10 @@ import { AnimalListType, columns } from './components/colums'
 import { DataTable } from './components/data-table'
 
 async function getData(): Promise<AnimalListType[]> {
-  const res = await fetch('http://192.168.10.8:3000/api/animal/list', {
+  const res = await fetch('http://localhost:3000/api/animal/list', {
     cache: 'no-store', // Evita cache para dados dinâmicos
   })
 
-  if (!res.ok) {
-    throw new Error('Erro ao carregar dados')
-  }
   return res.json()
 }
 
@@ -30,7 +27,7 @@ export default async function AnimalList() {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0  bg-themeGray">
         <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
           <div>
-            <h3 className="text-lg font-medium">
+            <h3 className="text-lg font-medium mt-3">
               Listagem de Animais Cadastrados
             </h3>
             <p className="text-sm text-muted-foreground mb-4 text-zinc-600">

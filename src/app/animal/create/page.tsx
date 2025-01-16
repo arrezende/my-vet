@@ -210,14 +210,15 @@ export default function PetOwnerCreate() {
                             <SelectValue placeholder="Selecione um tutor" />
                           </SelectTrigger>
                           <SelectContent>
-                            {tutores.map((tutor) => (
-                              <SelectItem
-                                key={tutor.id}
-                                value={tutor.id.toString()}
-                              >
-                                {tutor.nomeCompleto}
-                              </SelectItem>
-                            ))}
+                            {tutores.length > 0 &&
+                              tutores.map((tutor) => (
+                                <SelectItem
+                                  key={tutor.id}
+                                  value={tutor.id.toString()}
+                                >
+                                  {tutor.nomeCompleto}
+                                </SelectItem>
+                              ))}
                           </SelectContent>
                         </Select>
                       </FormControl>

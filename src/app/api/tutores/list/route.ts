@@ -14,7 +14,6 @@ export async function GET() {
     // Retorna os tutores como resposta JSON
     return new Response(JSON.stringify(tutores), { status: 200 })
   } catch (error) {
-    console.error('Erro ao buscar tutores:', error)
     return new Response(JSON.stringify({ error: 'Erro ao buscar tutores' }), {
       status: 500,
     })
